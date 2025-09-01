@@ -29,7 +29,7 @@ sheets = Sheets()
 sync = Sync(sheets)
 cert = Certificate()
 
-@dp.messege(Command("start"))
+@dp.message(Command("start"))
 async def start(message: Message, state: FSMContext):
     await message.answer("Введите ваше ФИО для получения сертификата")
     await state.set_state(States.waiting_name)
@@ -43,7 +43,7 @@ async def handle_name(message: Message, state: FSMContext):
         return
     
     await message.answer("Поиск...")
-    matches = sheets.seartch_student(name)
+    matches = sheets.search_student(name)
 
     if not matches: 
         await message.answer(f"'{name}' не найден. Проверьте написание ФИО")
