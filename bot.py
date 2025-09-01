@@ -81,20 +81,36 @@ async def handle_course(callback: types.CallbackQuery, state: FSMContext):
 
 async def send_certificate(message, student, state):
     try:
-        pdf = cert.generate(student['name'], student['course'], 
-                           student['period'], student['num'])
+        print(f"Генерирую сертификат для: {student}")  # Отладка
+        
+        name = student.get('name', 'Не указано')
+        course = student.get('course', 'Не указан') 
+        period = student.get('period', 'Не указан')
+        cert_num = student.get('num', '№1')
+        
+        print(f"Данные: name={name}, course={course}, period={period}, num={cert_num}")
+        
+        # Генерируем PDF
+        pdf = cert.generate(name, course, period, cert_num)
         
         file = types.BufferedInputFile(pdf.read(), 
-                                     f"Сертификат_{student['name'].replace(' ', '_')}.pdf")
+                                     f"Сертификат_{name.replace(' ', '_')}.pdf")
         
-        text = f"🎉 Ваш сертификат готов!\n\n {student['name']}\n{student['course']}"
+        text = f" Ваш сертификат готов!\n\n {name}\n {course}"
         
         await message.answer_document(file, caption=text)
         await state.clear()
         
+        print(f"Сертификат успешно отправлен для {name}")
+        
     except Exception as e:
-        await message.answer("Ошибка генерации сертификата")
+        print(f"Ошибка генерации сертификата: {e}")
+        import traceback
+        traceback.print_exc()  # Полный стек ошибки
+        
+        await message.answer(" Ошибка генерации сертификата. Обратитесь к менеджеру.")
         await state.clear()
+
 
 @dp.message(Command("admin"))
 async def admin(message: Message):
