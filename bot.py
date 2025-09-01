@@ -129,7 +129,7 @@ async def auto_sync():
         await bot.send_message(ADMIN_ID,text)
 
 async def main():
-    scheduler.add_job(auto_sync, 'interval', hours = 2)
+    scheduler.add_job(auto_sync, 'interval', hours = 5)
     scheduler.start()
 
     await bot.send_message(ADMIN_ID, "Бот запущен!")
