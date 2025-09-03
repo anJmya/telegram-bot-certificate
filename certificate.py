@@ -34,9 +34,28 @@ class Certificate:
             w, h = landscape(A4)
             
             # Рамки
-            c.setLineWidth(2)
-            c.rect(40, 40, w-80, h-80)
-            c.rect(60, 60, w-120, h-120)
+            from reportlab.lib.colors import Color
+
+            start_color = Color(80/255, 146/255, 169/255)  #5092A9
+            end_color = Color(143/255, 234/255, 212/255)   #8FEAD4
+            
+            # Внешняя рамка с градиентом 
+            gradient_steps = 50  
+            for i in range(gradient_steps):
+                ratio = i / gradient_steps
+                r = start_color.red + (end_color.red - start_color.red) * ratio
+                g = start_color.green + (end_color.green - start_color.green) * ratio
+                b = start_color.blue + (end_color.blue - start_color.blue) * ratio
+                
+                current_color = Color(r, g, b)
+                c.setStrokeColor(current_color)
+                c.setLineWidth(0.4)  # толщина линии 
+                
+                # смещаем каждую линию на толщину предидущей
+                offset = i * 0.4
+                c.rect(40 + offset, 40 + offset, w-80 - 2*offset, h-80 - 2*offset, fill=0)
+            
+
             
             # Лого Школы
             try:
